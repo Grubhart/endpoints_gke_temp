@@ -22,6 +22,9 @@ spec:
     targetPort: 8081
     protocol: TCP
     name: http
+  - port: 443
+    protocol: TCP
+    name: https
   selector:
     app: esp-echo
   type: LoadBalancer
