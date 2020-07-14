@@ -37,12 +37,17 @@ spec:
       labels:
         app: esp-echo
     spec:
+      volumes:
+        - name: nginx-ssl
+          secret:
+            secretName: nginx-ssl
       containers:
       # [START esp]
       - name: esp
         image: gcr.io/endpoints-release/endpoints-runtime:1
         args: [
           "--http_port=8081",
+          "--ssl_port=443",
           "--backend=127.0.0.1:8080",
           "--service=echo-api.endpoints.testing-ucic.cloud.goog",
           "--rollout_strategy=managed",
@@ -50,6 +55,11 @@ spec:
       # [END esp]
         ports:
           - containerPort: 8081
+          - containerPort: 443
+        volumeMounts:
+          - mountPath: /etc/nginx/ssl
+            name: nginx-ssl
+            readOnly: true
       - name: echo
         image: gcr.io/google-samples/echo-java:1.0
         ports:
